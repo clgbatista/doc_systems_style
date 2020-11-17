@@ -1,0 +1,161 @@
+\section{Protocolo}
+
+Esta seção se dispõe a formalizar as leis de formação do protocolo de comunicação do subsistema de TT\&C com o segmento solo.
+
+\subsection{Space Packet}
+
+O \textit{Space Packet} é a mensagem a ser transferida entre os segmentos espacial e solo.
+A seguir, sua lei de formação para codificação e decodificação.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{SPACE PACKET} \\ \hline
+AX 42 header & DATA PACKET \\ \hline
+\hl{17 B} & 0-255 B \\ \hline
+\end{tabular}%
+\end{table}
+
+\begin{description}[align=right]
+    \item[AX42 head] Cabeçalho do protocolo solo-bordo AX.42
+    \item[Data Pckt] Informação a ser transmitida \textbf{máx. 255 B}
+\end{description}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-311} & \textbf{O satélite deve ser capaz de codificar o \textit{Space Packet}} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-311}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-312} & \textbf{O satélite deve ser capaz de decodificar o \textit{Space Packet}} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-312}
+\end{table}
+
+\subsection{AX.42 Protocol}
+
+O Protocolo AX.42 é o protocolo de comunicação solo-bordo, fictício, baseado no protocolo solo-bordo, real, rádio-amador AX.25.
+A seguir, sua lei de formação para codificação e decodificação.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{AX42 Header} \\ \hline
+Flag & Endereço & Control & PID \\ \hline
+\hl{1 B} & 14 B & 1 B & 1 B \\ \hline
+\end{tabular}%
+\end{table}
+
+\begin{description}[align=right]
+    \item[Flag] Uma seqüência única de bits para indicar o início do frame \textbf{0x2A}
+    \item[Endereço] Campo que especifica o endereço de destino e fonte.
+    \item[Control] Comunicação do status do AX.42 \textbf{0x03}
+    \item[PID] Identificador do Protocolo \textbf{0xF0}
+\end{description}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-321} & \textbf{O satélite deve ser capaz de codificar AX42 \textit{Header}} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-321}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-322} & \textbf{O satélite deve ser capaz de decodificar AX42 \textit{Header}} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-322}
+\end{table}
+
+O campo de endereço é dividido da seguinte forma:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Endereço} \\ \hline
+Fonte & SSID & Destino & SSID \\ \hline
+6 B & 1 B & 6 B & 1 B \\ \hline
+\end{tabular}%
+\end{table}
+
+\begin{description}[align=right]
+    \item[Fonte] Endereço da fonte composto por uma sequência alfanumérica, em caixa alta, de caracteres ASCII, apenas.
+    \item[Destino] Endereço do destino composto por uma sequência alfanumérica, em caixa alta, de caracteres ASCII, apenas.
+    \item[SSID] Byte numérico da fonte ou destino que identifica múltiplas estações ou satélites que utilizam o mesmo endereço \textbf{U8}.
+\end{description}
+
+O endereço da estação solo para o Cube Design é \textbf{CUBED0}, SSID \textbf{0}. 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-323} & \textbf{O endereço do satélite deve ser composto por seis caracteres ASCII, em caixa alta, e um byte identificador, SSID, numérico.} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-323}
+\end{table}
+
+\subsection{Data Packet}
+
+O \textit{Data Packet} é o conjunto de dados a serem transmitidos via protocolo solo-bordo. Aqui há a identificação do telecomando ou telemetria, seu comprimento e parâmetros.
+A seguir, sua lei de formação para codificação e decodificação.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{DATA Packet} \\ \hline
+\multicolumn{3}{|c|}{Header} & \multirow{2}{*}{Info} \\ \cline{1-3}
+Code & SubCode & Length & \\ \hline
+1 B & 1 B & \hl{2 B} & 0-251 B \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{description}[align=right]
+    \item[Header] Cabeçalho do Pacote de Dados.
+    \item[Code] Identificador do Serviço.
+    \item[SubCode] Identificador de Subserviço.
+    \item[Length] Tamanho do frame do Data Packet, \textbf{Info}.
+    \item[Info] Mensagem a ser transmitida.
+\end{description}
+
+O \textit{Info} corresponde aos campos \#4-5 dos \textit{frames} de telemetria e telecomando.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-331} & \textbf{O satélite deve ser capaz de codificar o \textit{Data Packet}} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-331}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-332} & \textbf{O satélite deve ser capaz de decodificar o \textit{Data Packet}} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-332}
+\end{table}

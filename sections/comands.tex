@@ -1,0 +1,23 @@
+
+\subsubsection{Serviço de Gerenciamento de Modos Operacionais}
+
+\large{\textbf{Requisição de Modo de Operação atual do satélite.}}
+
+\begin{description}[align=right]
+    \item[Code] 0x01
+    \item[SubCode] 0x01
+    \item[Length] 0x03
+    \item[Parameter] 0x01
+    \item[Mnemônico] OPM-01
+\end{description}
+
+\large{\textbf{Requisição de alteração do Modo de Operação atual do satélite}}
+
+\begin{description}[align=right]
+    \item[Code] 0x01
+    \item[SubCode] 0x02
+    \item[Length] 0x03
+    \item[Parameter] 0x00 - \textit{Safe}, 0x02 - Nominal, 0x04 - \textit{Deployment}
+    \item[Mnemônico] OPM-02
+\end{description}
+

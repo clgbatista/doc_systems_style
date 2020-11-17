@@ -5,21 +5,50 @@
 \usepackage{multicol}
 \usepackage{color}
 \usepackage{adjustbox}
+\usepackage{ragged2e}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{soul}
 
+\graphicspath{{./figures/}}
 \setlength{\columnseprule}{1pt}
 
-\author{Carlos \newline Leandro}
-\verif{Danilo}
-\app{Fatima}
-\title{Interface Control Document}
-\date{\today}
-\project{Operation Challenges}
-
+\author{% use \newline to add authors
+    Carlos L G Batista
+}%
+\review{% use \newline to add reviewers
+    Felipe Oliveira Tavares \newline
+    Ítalo Pinto Rodrigues
+}%
+\app{Walter Abrahão dos Santos}
+\mission{CUBEDESIGN}
+\project{CUBEDESIGN-E-ST-TTC}
+\title{Subsistema de Rastreio, Telemetria e Comando}
+\version{Ver \textbf{1.r3}}
+\date{18 Set 2020}
 
 \begin{document}
 
 \maketitle
 
-\include{pg2}
+\makeversion
+
+\tableofcontents
+
+\justify
+
+\include{sections/intro}
+\include{sections/overview}
+\include{sections/protocol}
+\include{sections/service}
+% \include{sections/requisitions}
+\include{sections/challenge}
+
+\appendix
+\include{misc/data_types}
+\include{misc/bpsk}
+% \include{misc/commandslist}
+% \include{misc/telemetrieslist}
 
 \end{document}

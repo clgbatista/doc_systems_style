@@ -1,0 +1,78 @@
+\section{Telecomandos e Telemetrias}
+
+Esta seção trata da lei de formação das mensagens de telemetria e telecomandos, os \textit{frames}.
+
+Note que os campos \textit{Code}, \textit{SubCode} e \textit{Length} já estão descritos na subseção do \textit{Data Packet}, sendo repetidos, aqui, apenas a critério de contextualização.
+
+\subsection{\textit{Frame} de Telemetria}
+
+\begin{table}[H]
+\begin{tabular}{|cclccc|}
+\hline
+\multicolumn{6}{|c|}{\textbf{TM Frame}} \\ \hline
+\textbf{\#} & \textbf{Offset} & \textbf{Name} & \textbf{Type} & \textbf{Size in Bytes} & \textbf{Description / Observations} \\ \hline
+1 & 0 & TM Code & U8 & 1 & Type of this telemetry frame \\
+2 & 1 & TM Subcode & U8 & 1 & Subtype of this telemetry frame \\
+3 & 2 & Length & \hl{U16} & \hl{2} & Size of the next field in bytes \\ \hline
+4 & \hl{4} & Timestamp & U32 & 4 & RTC time in seconds since Unix epoch \\
+5 & 8 & TM Data & Variable & 1..64 & TM payload data or fragment \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{description}[align=right]
+    \item[Timestamp] Representação temporal, em segundos a partir do dia 01 de Janeiro de 1970.
+    \item[TM Data] Parâmetro dos itens de telemetria.
+\end{description}
+
+\subsubsection{Heurística}
+
+As telemetrias serão consideradas inválidas segundo:
+
+\begin{enumerate}
+    \item Campo \textit{Length} não corresponder ao tamanho atual do do campo Info (\textit{Timestamp+TM Data}).
+    \item Alguns dos campos não seguir o tamanho, em Bytes, descrito para o \textit{frame} de Telemetria.
+\end{enumerate}
+
+\subsection{\textit{Frame} de Telecomando}
+
+\begin{table}[H]
+\begin{tabular}{|cclccc|}
+\hline
+\multicolumn{6}{|c|}{\textbf{TC Frame}} \\ \hline
+\textbf{\#} & \textbf{Offset} & \textbf{Name} & \textbf{Type} & \textbf{Size in Bytes} & \textbf{Description / Observations} \\ \hline
+1 & 0 & TC Code & U8 & 1 & Telecommand code (type) \\
+2 & 1 & TC Subcode & U8 & 1 & Telecommand subcode (sub-type) \\
+3 & 2 & Length & \hl{U16} & \hl{2} & Size of the next field in bytes \\ \hline
+4 & \hl{4} & TC Parameters & U8 & 0..n & Telecommand parameters, 252 bytes max \\ 
+5 & n+4 & FCS & U16 & 2 & CRC-16-CCITT (0xFFFF) of the frame\\ \hline
+\end{tabular}
+\end{table}
+
+\begin{description}[align=right]
+    \item[TC Param] Parâmetro do telecomando.
+    \item[FCS] Código de Detecção de erros.
+\end{description}
+
+O campo FCS -- \textit{Frame-Check Sequence} -- é um código de detecção de erros que se utiliza do algoritmo de checagem de redundância cíclica -- Cyclic Redundand Check.
+
+Será utilizado o algoritmo \textbf{CRC-16-CCITT} com a palavra inicial \textbf{0xFFFF} para preenchimento do FCS em \hl{qualquer telecomando enviado}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{0.7\textwidth}|}
+        \hline
+        \rowcolor{orange}
+        \textbf{RQ-TTC-421} & \textbf{Os \textit{frames} de telecomando devem ser considerados inválidos segundo heurística} \\ \hline
+    \end{tabular}
+    \label{tab:rq-ttc-421}
+\end{table}
+
+\subsubsection{Heurística}
+
+Os Telecomandos serão consideradas inválidos segundo:
+
+\begin{enumerate}
+    \item Campo \textit{Length} não corresponder ao tamanho atual do do campo Info (\textit{TC Paramenter+FCS}).
+    \item O FCS calculado não coincidir com o recebido no \textit{frame}.
+    \item Alguns dos campos não seguir o tamanho, em Bytes, descrito para o \textit{frame} de Telecomando.
+\end{enumerate}

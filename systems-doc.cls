@@ -7,9 +7,11 @@
 \RequirePackage{times}
 \RequirePackage{graphicx}
 \RequirePackage{fancyhdr}
-\RequirePackage[top=2.5cm,left=2cm,bottom=3.5cm,right=1.5cm,foot=10pt]{geometry}
+\RequirePackage[top=2.5cm,left=2.5cm,bottom=3.5cm,right=1.5cm,foot=10pt]{geometry}
 \RequirePackage{tikz}
 \RequirePackage{systems-doc}
+\RequirePackage[labelfont=bf,font=bf]{caption}
+\RequirePackage{hyperref}
 
 \usepackage{tabu}
 \usepackage{array}
@@ -18,11 +20,15 @@
 \usepackage{lipsum}
 \usepackage[absolute]{textpos}
 \usetikzlibrary{calc}
-\usepackage[T1]{fontenc}
+% \usepackage[T1]{fontenc}
 \usepackage{lastpage}
 \usepackage{multicol}
-\usepackage{color}
+\usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage{adjustbox}
+
+\renewcommand{\thefigure}{\arabic{section}-\arabic{figure}}
+\renewcommand{\thetable}{\arabic{section}-\arabic{table}}
 
 \setlength{\columnseprule}{1pt}
 
@@ -51,18 +57,14 @@
 
 \setlength\headheight{33pt}
 \fancyheadoffset{\oddsidemargin +0.0cm}
-%\lhead{}
-\lhead{
-    NANOSATC-BR2
-}
-\rhead{
-    Ver.0.1\\
-    Data: \today
-}
+\lhead{}
+\lhead{\@mission}
+\rhead{\@version \\ \@project}
 \fancyfoot{}
-\setlength\footskip{15pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\setlength\footskip{25pt}
 \definecolor{footcolor}{rgb}{0,0,255}
-\cfoot{}
+\lfoot{\@title}
 \rfoot{\thepage/\pageref{LastPage}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,8 +74,8 @@
     \setlength\headheight{33pt}
     \fancyheadoffset{\oddsidemargin +0.0cm}
     \lhead{}
-    \lhead{NANOSATC-BR2}
-    \rhead{Ver.0.1 \\ \today}
+    \lhead{\@mission}
+    \rhead{\@version \\ \@date}
     \fancyfoot{}
     \setlength\footskip{15pt}
     \definecolor{footcolor}{rgb}{0,0,255}
@@ -89,7 +91,7 @@
     {\centering\includegraphics[width=3cm]{logo_inpe/inpe_logo.png}\par}
 	\vspace{1cm}
 	\centering
-{\scshape\LARGE CubeDesign \par}
+{\scshape\LARGE \@mission \par}
 \vspace{1cm}
 {\scshape\Large\@project\unskip\strut\par}
 \vspace{1.5cm}
@@ -97,14 +99,22 @@
 \vspace{10cm}
 \begin{tabular}{p{0.3\textwidth}|p{0.65\textwidth}}
     \textbf{Criado por:} & \@author \\ \hline
-    \textbf{Revisado por:} & \@verif\\ \hline
+    \textbf{Revisado por:} & \@review\\ \hline
     \textbf{Autorizado por:} & \@app\\
 \end{tabular}
 \vfill
 
-\vfill
-
 \end{titlepage}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand*{\makeversion}{%
+    \centering
+    {\textbf{CONTROLE DE VERSÕES} \par}
+    \vspace{1.5cm}
+    \input{./misc/version_control}
+    \newpage
 }
 
 \endinput
